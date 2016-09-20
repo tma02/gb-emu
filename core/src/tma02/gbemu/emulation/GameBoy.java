@@ -34,16 +34,20 @@ public class GameBoy {
         return this.cartridge;
     }
 
-    public void loadCartridge(String fileName) {
+    public boolean loadCartridge(String fileName) {
         File file = new File(fileName);
+        if (!file.isFile()) {
+            return false;
+        }
         this.cartridge = new Cartridge((int) file.length());
         try {
             DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
             dataInputStream.read(this.cartridge.getRom(), 0, this.cartridge.getRom().length);
             dataInputStream.close();
+            this.cartridge.setReady(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.cartridge.setReady(true);
+        return this.cartridge.isReady();
     }
 }

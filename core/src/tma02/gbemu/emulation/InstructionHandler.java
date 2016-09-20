@@ -119,6 +119,31 @@ public class InstructionHandler {
                 case 0x1F:
                     this.RRA();
                     return 4;
+                case 0x20:
+                    if (!this.gameBoy.getCpu().getFlag(CPU.Flag.Z)) {
+                        this.JR(this.getD8());
+                        return 12;
+                    }
+                    return 8;
+                case 0x21:
+                    this.LD(CPU.Register.HL, this.getD16());
+                    return 12;
+                case 0x22:
+                    this.LD(this.gameBoy.getCpu().getDoubleRegister(CPU.Register.HL), CPU.Register.A);
+                    this.INC(CPU.Register.HL);
+                    return 8;
+                case 0x23:
+                    this.INC(CPU.Register.HL);
+                    return 8;
+                case 0x24:
+                    this.INC(CPU.Register.H);
+                    return 4;
+                case 0x25:
+                    this.DEC(CPU.Register.H);
+                    return 4;
+                case 0x26:
+                    this.LD(CPU.Register.H, this.getD8());
+                    return 8;
                 default:
                     System.out.println("Unknown instruction: " + Integer.toHexString(instruction & 0xFF));
                     return 4;

@@ -37,10 +37,6 @@ public class CPU {
         long delta = System.nanoTime() - lastCycle;
         int cyclesTaken = this.step();
         cycles += cyclesTaken;
-        int sleep = (int) (((cyclesTaken / CLOCK_HZ) * 1000000000) - delta);
-        if (sleep > 0) {
-            Thread.sleep(0, sleep);
-        }
         if (System.currentTimeMillis() - lastSecond >= 1000) {
             System.out.println("cycles this second: " + cycles);
             cycles = 0;
