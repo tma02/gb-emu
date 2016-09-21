@@ -6,11 +6,13 @@ public class GameBoy {
 
     private CPU cpu;
     private MMU mmu;
+    private LCD lcd;
     private Cartridge cartridge;
 
     public GameBoy() {
         this.cpu = new CPU(this);
         this.mmu = new MMU(this);
+        this.lcd = new LCD(this);
     }
 
     public void init() {

@@ -11,6 +11,7 @@ public class CPU {
     private float cycles;
     private byte[] registers;
     private boolean stopped;
+    private boolean interruptEnable;
 
     public CPU(GameBoy gameBoy) {
         this.gameBoy = gameBoy;
@@ -45,6 +46,27 @@ public class CPU {
         lastCycle = System.nanoTime();
     }
 
+    public void dumpState() {
+        try {
+            System.out.println("A: " + Integer.toHexString(this.getRegister(Register.A) & 0xFF));
+            System.out.println("B: " + Integer.toHexString(this.getRegister(Register.B) & 0xFF));
+            System.out.println("C: " + Integer.toHexString(this.getRegister(Register.C) & 0xFF));
+            System.out.println("D: " + Integer.toHexString(this.getRegister(Register.D) & 0xFF));
+            System.out.println("E: " + Integer.toHexString(this.getRegister(Register.E) & 0xFF));
+            System.out.println("F: " + Integer.toHexString(this.getRegister(Register.F) & 0xFF));
+            System.out.println("H: " + Integer.toHexString(this.getRegister(Register.H) & 0xFF));
+            System.out.println("L: " + Integer.toHexString(this.getRegister(Register.L) & 0xFF));
+            System.out.println("AF: " + Integer.toHexString(this.getDoubleRegister(Register.AF) & 0xFFFF));
+            System.out.println("BC: " + Integer.toHexString(this.getDoubleRegister(Register.BC) & 0xFFFF));
+            System.out.println("DE: " + Integer.toHexString(this.getDoubleRegister(Register.DE) & 0xFFFF));
+            System.out.println("HL: " + Integer.toHexString(this.getDoubleRegister(Register.HL) & 0xFFFF));
+            System.out.println("PC: " + Integer.toHexString(this.getDoubleRegister(Register.PC) & 0xFFFF));
+            System.out.println("SP: " + Integer.toHexString(this.getDoubleRegister(Register.SP) & 0xFFFF));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public byte getRegister(Register register) throws Exception {
         if (register.isByte()) {
             return this.registers[register.getAddress()];
@@ -75,10 +97,10 @@ public class CPU {
 
     public short getDoubleRegister(Register register) throws Exception {
         if (!register.isByte()) {
-            short value;
-            value = (short) (this.registers[register.getAddress()] << 8);
-            value += this.registers[register.getAddress() + 1];
-            return value;
+            int value;
+            value = (this.registers[register.getAddress()] << 8);
+            value += this.registers[register.getAddress() + 1] & 0xFF;
+            return (short) value;
         }
         else {
             throw new Exception("Attempted to get 8 bit register through getDoubleRegister()");
@@ -91,7 +113,12 @@ public class CPU {
 
     public void setFlag(Flag flag, boolean value) {
         byte f = this.registers[Register.F.getAddress()];
-        f |= flag.getMask();
+        if (value) {
+            f |= flag.getMask();
+        }
+        else {
+            f &= (flag.getMask() ^ 0xFF);
+        }
         f &= 0xF0;
         this.registers[Register.F.getAddress()] = f;
     }
@@ -102,6 +129,14 @@ public class CPU {
 
     public void setStopped(boolean stopped) {
         this.stopped = stopped;
+    }
+
+    public boolean isInterruptEnable() {
+        return interruptEnable;
+    }
+
+    public void setInterruptEnable(boolean interruptEnable) {
+        this.interruptEnable = interruptEnable;
     }
 
     public enum Register {

@@ -13,6 +13,7 @@ public class CPUThread extends Thread {
         try {
             while (!this.cpu.isStopped()) {
                 this.cpu.run();
+                //this.cpu.dumpState();
             }
         } catch (Exception e) {
             e.printStackTrace();

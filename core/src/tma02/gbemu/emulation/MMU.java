@@ -27,36 +27,36 @@ public class MMU {
     }
 
     public void init() {
-        this.writeByte(0xFF05, (byte) 0x00);
-        this.writeByte(0xFF06, (byte) 0x00);
-        this.writeByte(0xFF07, (byte) 0x00);
-        this.writeByte(0xFF10, (byte) 0x80);
-        this.writeByte(0xFF11, (byte) 0xBF);
-        this.writeByte(0xFF12, (byte) 0xF3);
-        this.writeByte(0xFF14, (byte) 0xBF);
-        this.writeByte(0xFF16, (byte) 0x3F);
-        this.writeByte(0xFF17, (byte) 0x00);
-        this.writeByte(0xFF19, (byte) 0xBF);
-        this.writeByte(0xFF1A, (byte) 0x7F);
-        this.writeByte(0xFF1B, (byte) 0xFF);
-        this.writeByte(0xFF1C, (byte) 0x9F);
-        this.writeByte(0xFF1E, (byte) 0xBF);
-        this.writeByte(0xFF20, (byte) 0xFF);
-        this.writeByte(0xFF21, (byte) 0x00);
-        this.writeByte(0xFF22, (byte) 0xFF);
-        this.writeByte(0xFF23, (byte) 0xBF);
-        this.writeByte(0xFF24, (byte) 0x77);
-        this.writeByte(0xFF25, (byte) 0xF3);
-        this.writeByte(0xFF26, (byte) 0xF1); //SGB 0xF0
-        this.writeByte(0xFF40, (byte) 0x91);
-        this.writeByte(0xFF42, (byte) 0x00);
-        this.writeByte(0xFF43, (byte) 0x00);
-        this.writeByte(0xFF45, (byte) 0x00);
-        this.writeByte(0xFF47, (byte) 0xFC);
-        this.writeByte(0xFF48, (byte) 0xFF);
-        this.writeByte(0xFF49, (byte) 0xFF);
-        this.writeByte(0xFF4A, (byte) 0x00);
-        this.writeByte(0xFF4B, (byte) 0x00);
+        this.writeByte((short) 0xFF05, (byte) 0x00);
+        this.writeByte((short) 0xFF06, (byte) 0x00);
+        this.writeByte((short) 0xFF07, (byte) 0x00);
+        this.writeByte((short) 0xFF10, (byte) 0x80);
+        this.writeByte((short) 0xFF11, (byte) 0xBF);
+        this.writeByte((short) 0xFF12, (byte) 0xF3);
+        this.writeByte((short) 0xFF14, (byte) 0xBF);
+        this.writeByte((short) 0xFF16, (byte) 0x3F);
+        this.writeByte((short) 0xFF17, (byte) 0x00);
+        this.writeByte((short) 0xFF19, (byte) 0xBF);
+        this.writeByte((short) 0xFF1A, (byte) 0x7F);
+        this.writeByte((short) 0xFF1B, (byte) 0xFF);
+        this.writeByte((short) 0xFF1C, (byte) 0x9F);
+        this.writeByte((short) 0xFF1E, (byte) 0xBF);
+        this.writeByte((short) 0xFF20, (byte) 0xFF);
+        this.writeByte((short) 0xFF21, (byte) 0x00);
+        this.writeByte((short) 0xFF22, (byte) 0xFF);
+        this.writeByte((short) 0xFF23, (byte) 0xBF);
+        this.writeByte((short) 0xFF24, (byte) 0x77);
+        this.writeByte((short) 0xFF25, (byte) 0xF3);
+        this.writeByte((short) 0xFF26, (byte) 0xF1); //SGB 0xF0
+        this.writeByte((short) 0xFF40, (byte) 0x91);
+        this.writeByte((short) 0xFF42, (byte) 0x00);
+        this.writeByte((short) 0xFF43, (byte) 0x00);
+        this.writeByte((short) 0xFF45, (byte) 0x00);
+        this.writeByte((short) 0xFF47, (byte) 0xFC);
+        this.writeByte((short) 0xFF48, (byte) 0xFF);
+        this.writeByte((short) 0xFF49, (byte) 0xFF);
+        this.writeByte((short) 0xFF4A, (byte) 0x00);
+        this.writeByte((short) 0xFF4B, (byte) 0x00);
         this.ie = 0;
     }
 
@@ -68,7 +68,9 @@ public class MMU {
         this.wramBank = wramBank;
     }
 
-    public byte readByte(int address) {
+    public byte readByte(short word) {
+        //System.out.println("Read: " + Integer.toHexString(word & 0xFFFF));
+        int address = word & 0xFFFF;
         switch (address & 0xF000) {
             case 0x0000:
             case 0x1000:
@@ -113,7 +115,9 @@ public class MMU {
         return 0;
     }
 
-    public void writeByte(int address, byte value) {
+    public void writeByte(short word, byte value) {
+        //System.out.println("Wrote: " + Integer.toHexString(word & 0xFFFF));
+        int address = word & 0xFFFF;
         switch (address & 0xF000) {
             case 0x0000:
             case 0x1000:
